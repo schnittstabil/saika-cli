@@ -1,0 +1,58 @@
+{
+    "name": "schnittstabil/saika-cli",
+    "type": "library",
+    "description": "SAIKA CLI – Simple All-Inkl Kas Api",
+    "license": "MIT",
+    "keywords": [
+        "all-inkl",
+        "kas",
+        "api",
+        "cli"
+    ],
+    "authors": [
+        {
+            "name": "Michael Mayer",
+            "email": "michael@schnittstabil.de"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Schnittstabil\\Saika\\Cli\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Schnittstabil\\Saika\\Cli\\": "tests"
+        }
+    },
+    "require": {
+        "php": ">=7.2",
+        "ext-soap": "*",
+        "schnittstabil/get": "^3.2",
+        "schnittstabil/saika": "^0.1.0",
+        "symfony/console": "^2.0 || ^3.0 || ^4.0"
+    },
+    "require-dev": {
+        "sugared-rim/phpunit": "^7.0"
+    },
+    "bin": [
+        "saika"
+    ],
+    "scripts": {
+        "clean": "rm -rf build/ .php_cs.cache",
+        "doc": [
+            "sugared-sami",
+            "phpmetrics --report-html build/phpmetrics/index.html src/"
+        ],
+        "lint": [
+            "sugared-rim-cs"
+        ],
+        "test": [
+            "sugared-rim-phpunit",
+            "@lint"
+        ],
+        "travis": [
+            "sugared-rim-phpunit"
+        ]
+    }
+}
