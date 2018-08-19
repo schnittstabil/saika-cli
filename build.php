@@ -17,7 +17,7 @@ $org = new Phar('saika_box.phar');
 $org->extractTo($dir);
 $repack = new Phar('saika.phar');
 $repack->buildFromDirectory($dir);
-$repack->setDefaultStub('saika');
+$repack->setStub("#!/usr/bin/env php\n" . $repack->createDefaultStub('saika'));
 system("rm -rf $dir");
 
 
