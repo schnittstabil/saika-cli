@@ -3,8 +3,11 @@
 namespace Schnittstabil\Saika\Cli\Command;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
+
 
 use Schnittstabil\Saika\KasApi;
 use Schnittstabil\Get;
@@ -37,17 +40,69 @@ abstract class KasApiBaseCommand extends Command
         );
     }
 
+    protected function getUser(InputInterface $input, OutputInterface $output)
+    {
+        $user = trim($input->getOption('user'));
+        if ($user !== '') {
+            return $user;
+        }
+
+        $helper = $this->getHelper('question');
+
+        $question = new Question('Please enter your KAS login name: ');
+        $question->setNormalizer(function ($value) {
+            return $value === null ? null : trim($value);
+        });
+        $question->setValidator(function ($value) {
+            if (empty($value)) {
+                throw new \Exception('The name cannot be empty');
+            }
+
+            return $value;
+        });
+        $question->setMaxAttempts(2);
+
+        return $helper->ask($input, $output, $question);
+    }
+
+    protected function getPass(InputInterface $input, OutputInterface $output)
+    {
+        $pass = trim($input->getOption('pass'));
+        if ($pass !== '') {
+            return $pass;
+        }
+
+        $helper = $this->getHelper('question');
+
+        $question = new Question('Please enter your KAS login password: ');
+        $question->setNormalizer(function ($value) {
+            return $value === null ? null : trim($value);
+        });
+        $question->setValidator(function ($value) {
+            if (empty($value)) {
+                throw new \Exception('The password cannot be empty');
+            }
+
+            return $value;
+        });
+        $question->setHidden(true);
+        $question->setMaxAttempts(2);
+
+        return $helper->ask($input, $output, $question);
+    }
+
     /**
      * @param InputInterface $input
+     * @param OutputInterface $output
      * @return void
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    protected function getKasApi(InputInterface $input)
+    protected function getKasApi(InputInterface $input, OutputInterface $output)
     {
         if ($this->kasApi === null) {
-            $user = $input->getOption('user');
-            $pass = $input->getOption('pass');
+            $user = $this->getUser($input, $output);
+            $pass = $this->getPass($input, $output);
             $this->kasApi = KasApi::getInstance($user, $pass);
         }
 

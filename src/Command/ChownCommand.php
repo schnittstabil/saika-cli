@@ -36,7 +36,7 @@ class ChownCommand extends KasApiBaseCommand
         $owner = $input->getArgument('owner');
         $recursive = $input->getOption('recursive');
 
-        $this->getKasApi($input)->chown($file, $owner, $recursive);
+        $this->getKasApi($input, $output)->chown($file, $owner, $recursive);
         return 0;
     }
 }
